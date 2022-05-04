@@ -12,7 +12,7 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
 ## Testing 
 
-Shell would work like this in interactive mode 
+Shell would work like this in an interactive mode 
 
 ```
 $ ./hsh
