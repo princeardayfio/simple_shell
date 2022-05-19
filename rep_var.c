@@ -1,12 +1,11 @@
 #include "main.h"
 
 /**
- * check_env - checks if the typed variable is an env variable
- *
+ * check_env - checks if the typed variable is an  env
  * @h: head of linked list
  * @in: input string
  * @data: data structure
- * Return: no return
+ *  Return: no return
  */
 void check_env(r_var **h, char *in, data_shell *data)
 {
@@ -42,12 +41,11 @@ void check_env(r_var **h, char *in, data_shell *data)
 }
 
 /**
- * check_vars - check if the typed variable is $$ or $?
- *
- * @h: head of the linked list
+ * check_vars - checks if the typed variable is $$ or $
+ * @h: head of linked list
  * @in: input string
- * @st: last status of the Shell
- * @data: data structure
+ * @st: last status of the shell
+ * @data: relevant data
  * Return: no return
  */
 int check_vars(r_var **h, char *in, char *st, data_shell *data)
@@ -76,7 +74,7 @@ int check_vars(r_var **h, char *in, char *st, data_shell *data)
 			else if (in[i + 1] == ';')
 				add_rvar_node(h, 0, NULL, 0);
 			else
-				check_env(h, in + i, data);
+				check_env(h, in + 1, data);
 		}
 	}
 
@@ -84,100 +82,9 @@ int check_vars(r_var **h, char *in, char *st, data_shell *data)
 }
 
 /**
- * replaced_input - replaces string into variables
- *
- * @head: head of the linked list
+ * replaced_input - replaces strings int variables
+ * @head: head of linked list
  * @input: input string
- * @new_input: new input string (replaced)
+ * @new_input: new input string(replaced)
  * @nlen: new length
  * Return: replaced string
- */
-char *replaced_input(r_var **head, char *input, char *new_input, int nlen)
-{
-	r_var *indx;
-	int i, j, k;
-
-	indx = *head;
-	for (j = i = 0; i < nlen; i++)
-	{
-		if (input[j] == '$')
-		{
-			if (!(indx->len_var) && !(indx->len_val))
-			{
-				new_input[i] = input[j];
-				j++;
-			}
-			else if (indx->len_var && !(indx->len_val))
-			{
-				for (k = 0; k < indx->len_var; k++)
-					j++;
-				i--;
-			}
-			else
-			{
-				for (k = 0; k < indx->len_val; k++)
-				{
-					new_input[i] = indx->val[k];
-					i++;
-				}
-				j += (indx->len_var);
-				i--;
-			}
-			indx = indx->next;
-		}
-		else
-		{
-			new_input[i] = input[j];
-			j++;
-		}
-	}
-
-	return (new_input);
-}
-
-/**
- * rep_var - calls functions to replace string into vars
- *
- * @input: input string
- * @datash: data structure
- * Return: replaced string
- */
-char *rep_var(char *input, data_shell *datash)
-{
-	r_var *head, *indx;
-	char *status, *new_input;
-	int olen, nlen;
-
-	status = aux_itoa(datash->status);
-	head = NULL;
-
-	olen = check_vars(&head, input, status, datash);
-
-	if (head == NULL)
-	{
-		free(status);
-		return (input);
-	}
-
-	indx = head;
-	nlen = 0;
-
-	while (indx != NULL)
-	{
-		nlen += (indx->len_val - indx->len_var);
-		indx = indx->next;
-	}
-
-	nlen += olen;
-
-	new_input = malloc(sizeof(char) * (nlen + 1));
-	new_input[nlen] = '\0';
-
-	new_input = replaced_input(&head, input, new_input, nlen);
-
-	free(input);
-	free(status);
-	free_rvar_list(&head);
-
-	return (new_input);
-}
